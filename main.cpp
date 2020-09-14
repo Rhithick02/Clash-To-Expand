@@ -12,6 +12,9 @@ struct node {
 node grid[10][10];
 int filledBoxes;
 map < char, int > score;
+bool valid(int i, int j) {
+    return i>=0 && j>=0 && i<10 && j<10;
+}
 void setup() {
     filledBoxes = 0;
     score['@'] = 0;
@@ -25,7 +28,8 @@ void setup() {
 }
 
 void printgrid() {
-    system("CLS");
+    system("clear");
+    cout << "Score @ : " << score['@'] << "\t\t" << "Score #: " << score['#'] << "\n\n";
     for (size_t i = 0; i < 53; i++) {
         cout << "# ";
     }
@@ -87,7 +91,7 @@ void explode(int row, int col, char own) {
         for (int i = 0; i < 4; i++) {
             int rr = row + dx[i];
             int cl = col + dy[i];
-            if (rr < 0 || rr > 9 || cl < 0 || cl > 9) {
+            if (!valid(rr, cl)) {
                 continue;
             }
             explode(rr, cl, own);
@@ -102,18 +106,13 @@ void explode(int row, int col, char own) {
     }
 }
 
-bool valid(int i, int j)
-{
-    return i>=0 && j>=0 && i<10 && j<10;
-}
-
 pair < int, int > input(char player) {
     int m, n;
     cout << "Player: " << player << " Enter the index ";
     char secplayer = (player == '@' ? '#' : '@');
     while (true) {
         cin >> m >> n;
-        if (grid[m-1][n-1].owner == secplayer || !valid(m, n)) {
+        if (grid[m-1][n-1].owner == secplayer || !valid(m - 1, n - 1)) {
             std::cout << "Enter a valid index: ";
         } else break;
     }
