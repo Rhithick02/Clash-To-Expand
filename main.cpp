@@ -113,7 +113,7 @@ pair < int, int > input(char player) {
     char secplayer = (player == '@' ? '#' : '@');
     while (true) {
         cin >> m >> n;
-        if (grid[m][n].owner == secplayer || !valid(m, n)) {
+        if (grid[m-1][n-1].owner == secplayer || !valid(m, n)) {
             std::cout << "Enter a valid index: ";
         } else break;
     }
