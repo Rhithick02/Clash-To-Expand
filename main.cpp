@@ -1,5 +1,6 @@
 #include <iostream>
 #include <map>
+#include<cstdlib>
 using namespace std;
 
 struct node{
@@ -23,7 +24,7 @@ void setup(){
 }
 
 void printgrid(){
-    system("clear");
+    system("CLS");
     for (size_t i = 0 ; i < 53; i++) {
         cout<<"# ";
     }
@@ -129,4 +130,3 @@ int main(){
         cout<<"player # won."<<endl;
     } else std::cout << "we got a tie." << endl;
 }
-
