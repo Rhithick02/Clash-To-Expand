@@ -1,7 +1,5 @@
 #include <iostream>
-
 #include <map>
-
 #include<cstdlib>
 
 using namespace std;
@@ -57,7 +55,7 @@ void printgrid() {
     cout << endl;
 }
 
-bool isexplode(int row, int col) {
+bool canExplode(int row, int col) {
     if ((row == 0 and col == 0) ||
         (row == 9 and col == 0) ||
         (row == 0 and col == 9) ||
@@ -76,16 +74,16 @@ bool isexplode(int row, int col) {
 }
 
 void explode(int row, int col, char own) {
-    if (isexplode(row, col)) {
+    if (canExplode(row, col)) {
         // logic
         int dx[] = {0, 1, 0, -1};
         int dy[] = {1, 0, -1, 0};
-        
+
         grid[row][col].owner = ' ';
         grid[row][col].density = 0;
         filledBoxes--;
         score[own]--;
-        
+
         for (int i = 0; i < 4; i++) {
             int rr = row + dx[i];
             int cl = col + dy[i];
@@ -104,13 +102,18 @@ void explode(int row, int col, char own) {
     }
 }
 
+bool valid(int i, int j)
+{
+    return i>=0 && j>=0 && i<10 && j<10;
+}
+
 pair < int, int > input(char player) {
     int m, n;
     cout << "Player: " << player << " Enter the index ";
     char secplayer = (player == '@' ? '#' : '@');
     while (true) {
         cin >> m >> n;
-        if (grid[m][n].owner == secplayer) {
+        if (grid[m][n].owner == secplayer || !valid(m, n)) {
             std::cout << "Enter a valid index: ";
         } else break;
     }
