@@ -111,7 +111,7 @@ pair<int, int> input(char player){
             std::cout << "enter a valid index: ";
         } else break;
     }
-    return make_pair(m, n);
+    return make_pair(m - 1, n - 1);
 }
 
 int main(){
