@@ -77,7 +77,7 @@ bool canExplode(int row, int col) {
     return false;
 }
 
-void explode(int row, int col, char own) {
+void explode(int row, int col, char own, char child) {
     if (canExplode(row, col)) {
         // logic
         int dx[] = {0, 1, 0, -1};
@@ -86,7 +86,7 @@ void explode(int row, int col, char own) {
         grid[row][col].owner = ' ';
         grid[row][col].density = 0;
         filledBoxes--;
-        score[own]--;
+        score[child]--;
 
         for (int i = 0; i < 4; i++) {
             int rr = row + dx[i];
@@ -94,7 +94,7 @@ void explode(int row, int col, char own) {
             if (!valid(rr, cl)) {
                 continue;
             }
-            explode(rr, cl, own);
+            explode(rr, cl, own, grid[rr][cl].owner);
         }
     } else {
         // if (grid[row][col].density == 0) {
@@ -137,7 +137,7 @@ int main() {
     while (filledBoxes != 100) {
         printgrid();
         pair < int, int > p = input(player);
-        explode(p.first, p.second, player);
+        explode(p.first, p.second, player,player);
         update_score();
         player = (player == '@' ? '#' : '@');
     }
