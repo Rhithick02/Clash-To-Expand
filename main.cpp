@@ -97,15 +97,27 @@ void explode(int row, int col, char own) {
             explode(rr, cl, own);
         }
     } else {
-        if (grid[row][col].density == 0) {
-            filledBoxes++;
-            score[own]++;
-        }
+        // if (grid[row][col].density == 0) {
+        //     filledBoxes++;
+        //     score[own]++;
+        // }
         grid[row][col].density++;
         grid[row][col].owner = own;
     }
 }
-
+void update_score() {
+    filledBoxes = 0;
+    score['#'] = score['@'] = 0;
+    for(int i = 0; i < 10; i++) {
+        for(int j = 0; j < 10; j++) {
+            if(!grid[i][j].density) continue;
+            else {
+                filledBoxes++;
+                score[grid[i][j].owner]++;
+            }
+        }
+    }
+}
 pair < int, int > input(char player) {
     int m, n;
     cout << "Player: " << player << " Enter the index ";
@@ -126,6 +138,7 @@ int main() {
         printgrid();
         pair < int, int > p = input(player);
         explode(p.first, p.second, player);
+        update_score();
         player = (player == '@' ? '#' : '@');
     }
     if (score['@'] > score['#']) {
