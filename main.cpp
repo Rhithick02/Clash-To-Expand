@@ -99,10 +99,17 @@ void explode(int row, int col, char own, char child) {
     } else {
         if (grid[row][col].density == 0) {
             filledBoxes++;
-            score[own]++;
+            //score[own]++;
         }
         grid[row][col].density++;
         grid[row][col].owner = own;
+        if(child==' '){
+            score[own]++;
+        }
+        else if(child!=own){
+            score[own]++;
+            score[child]--;
+        }
     }
 }
 
@@ -125,7 +132,7 @@ int main() {
     while (filledBoxes != 100) {
         printgrid();
         pair < int, int > p = input(player);
-        explode(p.first, p.second, player, player);
+        explode(p.first, p.second, player, grid[p.first][p.second].owner);
         player = (player == '@' ? '#' : '@');
     }
     if (score['@'] > score['#']) {
