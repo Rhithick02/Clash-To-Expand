@@ -118,7 +118,7 @@ void bfs(int row, int col, char own, char child) {
 // Getting input from the user
 pair < int, int > input(char player) {  
     int m, n;
-    cout << "Player: " << player << " Enter the index ";
+    cout << "Player: " << player << " Enter the Co-ordinates ";
     char secplayer = (player == '@' ? '#' : '@');
     while (true) {
         cin >> m >> n;
