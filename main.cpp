@@ -13,11 +13,14 @@ struct node {
 node grid[10][10];
 int filledBoxes;
 map < char, int > score;
-bool valid(int i, int j) {
+
+// To check whether the indices are within the table
+bool valid(int i, int j) {  
     return i>=0 && j>=0 && i<10 && j<10;
 }
 
-void setup() {
+// Initialising the grid and variables
+void setup() {  
     filledBoxes = 0;
     score['@'] = 0;
     score['#'] = 0;
@@ -29,8 +32,9 @@ void setup() {
     }
 }
 
-void printgrid() {
-    system("CLS");
+// The table is printed and also the constant updation happens here after the user enters the input
+void printgrid() {  
+    system("clear");
     score['@'] = score['#'] = filledBoxes = 0;
     cout << "\n\n";
     for (size_t i = 0; i < 53; i++) {
@@ -66,7 +70,8 @@ void printgrid() {
 
 }
 
-bool canExplode(int row, int col) {
+// To check whether the cell is capable of expanding
+bool canExplode(int row, int col) {  
     if ((row == 0 and col == 0) ||
         (row == 9 and col == 0) ||
         (row == 0 and col == 9) ||
@@ -84,7 +89,8 @@ bool canExplode(int row, int col) {
     return false;
 }
 
-void bfs(int row, int col, char own) {
+// Expanding the territiory
+void bfs(int row, int col, char own, char child) {  
     queue <pair<int, int> > q;
 
     q.push({row, col});
@@ -109,7 +115,8 @@ void bfs(int row, int col, char own) {
     }
 }
 
-pair < int, int > input(char player) {
+// Getting input from the user
+pair < int, int > input(char player) {  
     int m, n;
     cout << "Player: " << player << " Enter the index ";
     char secplayer = (player == '@' ? '#' : '@');
@@ -125,10 +132,11 @@ pair < int, int > input(char player) {
 int main() {
     setup();
     char player = '@';
+    // If the filed box is 100 and player cant make a move the game ends
     while (filledBoxes != 100) {
         printgrid();
         pair < int, int > p = input(player);
-        bfs(p.first, p.second, player);
+        bfs(p.first, p.second, player, (player == '@' ? '#' : '@'));
         player = (player == '@' ? '#' : '@');
     }
     if (score['@'] > score['#']) {
