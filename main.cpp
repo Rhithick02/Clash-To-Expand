@@ -13,11 +13,9 @@ struct node {
 node grid[10][10];
 int filledBoxes;
 map < char, int > score;
-
 bool valid(int i, int j) {
-    return i >= 0 && j >= 0 && i < 10 && j < 10;
+    return i>=0 && j>=0 && i<10 && j<10;
 }
-
 
 void setup() {
     filledBoxes = 0;
@@ -31,10 +29,9 @@ void setup() {
     }
 }
 
-
 void printgrid() {
     system("CLS");
-    score['@'] = score['#'] = 0;
+    score['@'] = score['#'] = filledBoxes = 0;
     cout << "\n\n";
     for (size_t i = 0; i < 53; i++) {
         cout << "# ";
@@ -55,6 +52,7 @@ void printgrid() {
             score[grid[i][j].owner]++;
             cout << "( " << grid[i][j].owner << ", ";
             if (grid[i][j].density != 0) {
+                filledBoxes++;
                 cout << grid[i][j].density << " )  ";
             } else cout << "  )  ";
         }
@@ -68,7 +66,6 @@ void printgrid() {
 
 }
 
-
 bool canExplode(int row, int col) {
     if ((row == 0 and col == 0) ||
         (row == 9 and col == 0) ||
@@ -77,18 +74,15 @@ bool canExplode(int row, int col) {
         if (grid[row][col].density == 1) {
             return true;
         }
-        return false;
     } else if (row == 0 || row == 9 || col == 0 || col == 9) {
         if (grid[row][col].density == 2) {
             return true;
         }
-        return false;
     } else if (grid[row][col].density == 3) {
         return true;
     }
     return false;
 }
-
 
 void bfs(int row, int col, char own, char child) {
     queue <pair<int, int> > q;
@@ -100,8 +94,6 @@ void bfs(int row, int col, char own, char child) {
         if(canExplode(cur.first, cur.second)) {
             grid[cur.first][cur.second].density = 0;
             grid[cur.first][cur.second].owner = ' ';
-            score[own]--;
-            filledBoxes--;
             int dx[] = {-1, 1, 0, 0}, dy[] = {0, 0, -1, 1};
 
             for(int i = 0; i < 4; i++) {
@@ -110,21 +102,11 @@ void bfs(int row, int col, char own, char child) {
                     q.push({x, y});
             }
 
-        } else {
-            if(grid[cur.first][cur.second].owner == child) {
-                score[child]--;
-                score[own]++;
-            } else if(grid[cur.first][cur.second].owner == ' ') {
-                score[own]++;
-                filledBoxes++;
-            }
-            grid[cur.first][cur.second].density++;
-            grid[cur.first][cur.second].owner = own;
-
-        }
+        } 
+        grid[cur.first][cur.second].density++;
+        grid[cur.first][cur.second].owner = own;
     }
 }
-
 
 pair < int, int > input(char player) {
     int m, n;
