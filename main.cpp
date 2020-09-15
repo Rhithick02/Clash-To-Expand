@@ -102,9 +102,10 @@ void bfs(int row, int col, char own) {
                     q.push({x, y});
             }
 
-        } 
-        grid[cur.first][cur.second].density++;
-        grid[cur.first][cur.second].owner = own;
+        } else {
+            grid[cur.first][cur.second].density++;
+            grid[cur.first][cur.second].owner = own;
+        }
     }
 }
 
