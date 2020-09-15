@@ -84,7 +84,7 @@ bool canExplode(int row, int col) {
     return false;
 }
 
-void bfs(int row, int col, char own, char child) {
+void bfs(int row, int col, char own) {
     queue <pair<int, int> > q;
 
     q.push({row, col});
@@ -127,7 +127,7 @@ int main() {
     while (filledBoxes != 100) {
         printgrid();
         pair < int, int > p = input(player);
-        bfs(p.first, p.second, player, (player == '@' ? '#' : '@'));
+        bfs(p.first, p.second, player);
         player = (player == '@' ? '#' : '@');
     }
     if (score['@'] > score['#']) {
