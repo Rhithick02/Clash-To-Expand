@@ -11,6 +11,7 @@ Instruction:
     3. In doing so the soldier conquers the territory even though if it is enemy territory by hypnotizing enemy soldier to fight for them. To be put clearly if there are 2 enemy soldier in one plot and if a soldier enters this territory while expanding the total soldiers in their control will be 3 (including the 2 enemy soldiers).
     4. After expanding if any territory reaches their limit, they again expands as said in 2nd point. 
     5. The objective is to conquer as many plots you could.
+    6. The character in the grid says the player who has gained control over that place and the number represents the number of soldiers in it.
 
 
 
