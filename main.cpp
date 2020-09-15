@@ -1,6 +1,7 @@
 #include <iostream>
 #include <map>
 #include<cstdlib>
+#include <queue>
 
 using namespace std;
 
@@ -12,9 +13,12 @@ struct node {
 node grid[10][10];
 int filledBoxes;
 map < char, int > score;
+
 bool valid(int i, int j) {
-    return i>=0 && j>=0 && i<10 && j<10;
+    return i >= 0 && j >= 0 && i < 10 && j < 10;
 }
+
+
 void setup() {
     filledBoxes = 0;
     score['@'] = 0;
@@ -27,9 +31,11 @@ void setup() {
     }
 }
 
+
 void printgrid() {
-    system("clear");
-    cout << "Score @ : " << score['@'] << "\t\t" << "Score #: " << score['#'] << "\n\n";
+    system("CLS");
+    score['@'] = score['#'] = 0;
+    cout << "\n\n";
     for (size_t i = 0; i < 53; i++) {
         cout << "# ";
     }
@@ -46,6 +52,7 @@ void printgrid() {
         }
         std::cout << i + 1 << ' ';
         for (int j = 0; j < 10; j++) {
+            score[grid[i][j].owner]++;
             cout << "( " << grid[i][j].owner << ", ";
             if (grid[i][j].density != 0) {
                 cout << grid[i][j].density << " )  ";
@@ -56,8 +63,11 @@ void printgrid() {
     for (size_t i = 0; i < 53; i++) {
         cout << "# ";
     }
-    cout << endl;
+    cout << "\n\n";
+    cout << "Score @ : " << score['@'] << "\t\t" << "Score #: " << score['#'] << "\n\n";
+
 }
+
 
 bool canExplode(int row, int col) {
     if ((row == 0 and col == 0) ||
@@ -67,51 +77,54 @@ bool canExplode(int row, int col) {
         if (grid[row][col].density == 1) {
             return true;
         }
+        return false;
     } else if (row == 0 || row == 9 || col == 0 || col == 9) {
         if (grid[row][col].density == 2) {
             return true;
         }
+        return false;
     } else if (grid[row][col].density == 3) {
         return true;
     }
     return false;
 }
 
-void explode(int row, int col, char own, char child) {
-    if (canExplode(row, col)) {
-        // logic
-        int dx[] = {0, 1, 0, -1};
-        int dy[] = {1, 0, -1, 0};
 
-        grid[row][col].owner = ' ';
-        grid[row][col].density = 0;
-        filledBoxes--;
-        score[child]--;
+void bfs(int row, int col, char own, char child) {
+    queue <pair<int, int> > q;
 
-        for (int i = 0; i < 4; i++) {
-            int rr = row + dx[i];
-            int cl = col + dy[i];
-            if (!valid(rr, cl)) {
-                continue;
+    q.push({row, col});
+    while(!q.empty()) {
+        pair<int, int> cur = q.front();
+        q.pop();
+        if(canExplode(cur.first, cur.second)) {
+            grid[cur.first][cur.second].density = 0;
+            grid[cur.first][cur.second].owner = ' ';
+            score[own]--;
+            filledBoxes--;
+            int dx[] = {-1, 1, 0, 0}, dy[] = {0, 0, -1, 1};
+
+            for(int i = 0; i < 4; i++) {
+                int x = cur.first + dx[i], y = cur.second + dy[i];
+                if(!valid(x, y)) continue;
+                    q.push({x, y});
             }
-            explode(rr, cl, own, grid[rr][cl].owner);
-        }
-    } else {
-        if (grid[row][col].density == 0) {
-            filledBoxes++;
-            //score[own]++;
-        }
-        grid[row][col].density++;
-        grid[row][col].owner = own;
-        if(child==' '){
-            score[own]++;
-        }
-        else if(child!=own){
-            score[own]++;
-            score[child]--;
+
+        } else {
+            if(grid[cur.first][cur.second].owner == child) {
+                score[child]--;
+                score[own]++;
+            } else if(grid[cur.first][cur.second].owner == ' ') {
+                score[own]++;
+                filledBoxes++;
+            }
+            grid[cur.first][cur.second].density++;
+            grid[cur.first][cur.second].owner = own;
+
         }
     }
 }
+
 
 pair < int, int > input(char player) {
     int m, n;
@@ -132,7 +145,7 @@ int main() {
     while (filledBoxes != 100) {
         printgrid();
         pair < int, int > p = input(player);
-        explode(p.first, p.second, player, grid[p.first][p.second].owner);
+        bfs(p.first, p.second, player, (player == '@' ? '#' : '@'));
         player = (player == '@' ? '#' : '@');
     }
     if (score['@'] > score['#']) {
